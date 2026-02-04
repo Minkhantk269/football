@@ -1,4 +1,4 @@
-name: football.json
+name: Auto generate final_output.json
 
 on:
   schedule:
@@ -46,5 +46,5 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Auto update football_live.json"
+          git commit -m "Auto update final_output.json"
           git push

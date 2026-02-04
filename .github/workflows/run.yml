@@ -1,12 +1,9 @@
-name: Auto generate final_output.json
+name: Auto generate & push final_output.json to other repo
 
 on:
   schedule:
-    - cron: "*/3 * * * *"   # every 3 minutes
-  workflow_dispatch:        # manual run button too
-
-permissions:
-  contents: write
+    - cron: "*/3 * * * *"
+  workflow_dispatch:
 
 jobs:
   run:
@@ -16,7 +13,7 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - name: Checkout
+      - name: Checkout source repo (Account A)
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -29,22 +26,41 @@ jobs:
           python -m pip install --upgrade pip
           pip install pycryptodome
 
-      - name: Run script
+      - name: Run script (creates final_output.json)
         run: |
           python main.py
 
-      - name: Commit & push if changed
+      # --- Push final_output.json to Account B repo ---
+      - name: Push final_output.json to target repo
+        env:
+          TARGET_REPO_TOKEN: ${{ secrets.TARGET_REPO_TOKEN }}
         run: |
+          set -e
+
+          # ====== CHANGE THESE ======
+          TARGET_OWNER="Minkhantky"
+          TARGET_REPO="football"
+          TARGET_BRANCH="main"     # or master
+          TARGET_PATH="final_output.json"  # path inside target repo
+          # ==========================
+
+          rm -rf target_repo
+          git clone "https://${TARGET_REPO_TOKEN}@github.com/${TARGET_OWNER}/${TARGET_REPO}.git" target_repo
+          cd target_repo
+
+          git checkout "${TARGET_BRANCH}" || git checkout -b "${TARGET_BRANCH}"
+
+          cp -f ../final_output.json "${TARGET_PATH}"
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add final_output.json
+          git add "${TARGET_PATH}"
 
-          # only commit if there are changes
           if git diff --cached --quiet; then
             echo "No changes to commit."
             exit 0
           fi
 
           git commit -m "Auto update final_output.json"
-          git push
+          git push origin "${TARGET_BRANCH}"

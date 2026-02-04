@@ -33,7 +33,7 @@ jobs:
       # --- Push final_output.json to Account B repo ---
       - name: Push final_output.json to target repo
         env:
-          TARGET_REPO_TOKEN: ${{ secrets.TARGET_REPO_TOKEN }}
+          TARGET_REPO_TOKEN: ${{ secrets.FOOTBALL }}
         run: |
           set -e
 

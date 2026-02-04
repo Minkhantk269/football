@@ -186,7 +186,7 @@ def main():
 
         final.append(build_final_event(ev, status, live_links))
 
-    with open("final_output.json", "w", encoding="utf-8") as f:
+    with open("football_live.json", "w", encoding="utf-8") as f:
         json.dump(final, f, ensure_ascii=False, indent=2)
 
     print("Done ✅")

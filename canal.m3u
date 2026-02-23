@@ -1,4 +1,4 @@
-#EXTM3U url=
+#EXTM3U url=https://raw.githubusercontent.com/Minkhantk269/football/refs/heads/main/canal.m3u
 
 #EXTINF:-1 tvg-id="" tvg-logo="https://api.bigwifegang.org/images/png/pl-canalsport1.png" group-title="football",Canalsport1
 #EXTVLCOPT:http-referrer=https://github.com/
